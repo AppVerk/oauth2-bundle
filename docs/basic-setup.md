@@ -135,6 +135,26 @@ security:
 ```
 
 > **NOTE:** The order of firewalls is important because Symfony will evaluate them in the specified order.
+>
+## Configuring the Security layer using Authenticators
+
+Starting from Symfony 5.3 the Guard component is being deprecated and dropped in favor of authenticators
+
+```yaml
+security:
+    firewalls:
+        api_token:
+            pattern: ^/api/token$
+            security: false
+        api:
+            pattern: ^/api
+            security: true
+            stateless: true
+            custom_authenticators:
+                - Trikoder\Bundle\OAuth2Bundle\Security\Authenticator\OAuth2Authenticator
+```
+
+> **NOTE:** The order of firewalls is important because Symfony will evaluate them in the specified order.
 
 ## Restricting routes by scope
 

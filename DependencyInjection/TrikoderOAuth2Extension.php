@@ -30,6 +30,7 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Trikoder\Bundle\OAuth2Bundle\DBAL\Type\Grant as GrantType;
 use Trikoder\Bundle\OAuth2Bundle\DBAL\Type\RedirectUri as RedirectUriType;
 use Trikoder\Bundle\OAuth2Bundle\DBAL\Type\Scope as ScopeType;
@@ -42,6 +43,7 @@ use Trikoder\Bundle\OAuth2Bundle\Manager\Doctrine\RefreshTokenManager;
 use Trikoder\Bundle\OAuth2Bundle\Manager\ScopeManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Model\Scope as ScopeModel;
 use Trikoder\Bundle\OAuth2Bundle\Security\Authentication\Token\OAuth2TokenFactory;
+use Trikoder\Bundle\OAuth2Bundle\Security\Authenticator\OAuth2Authenticator;
 use Trikoder\Bundle\OAuth2Bundle\Service\CredentialsRevoker\DoctrineCredentialsRevoker;
 
 final class TrikoderOAuth2Extension extends Extension implements PrependExtensionInterface, CompilerPassInterface
@@ -75,6 +77,9 @@ final class TrikoderOAuth2Extension extends Extension implements PrependExtensio
 
         $container->registerForAutoconfiguration(GrantTypeInterface::class)
             ->addTag('trikoder.oauth2.authorization_server.grant');
+
+        $container->getDefinition(OAuth2Authenticator::class)
+            ->replaceArgument('$userProvider', new Reference(UserProviderInterface::class));
     }
 
     /**
