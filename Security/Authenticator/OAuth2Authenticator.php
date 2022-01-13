@@ -86,6 +86,7 @@ final class OAuth2Authenticator implements AuthenticatorInterface
         $tokenUser = $passport->getUser() instanceof NullUser ? null : $passport->getUser();
 
         $oauth2Token = $this->oauth2TokenFactory->createOAuth2Token($this->psr7Request, $tokenUser, $this->providerKey);
+        $oauth2Token->setAuthenticated(true);
 
         if (!$this->isAccessToRouteGranted($oauth2Token)) {
             throw InsufficientScopesException::create($oauth2Token);
